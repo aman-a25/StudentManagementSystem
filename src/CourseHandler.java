@@ -55,6 +55,12 @@ public class CourseHandler implements CourseOperations {
 
     }
 
+    // todo: isValidCourseId() here
+
+    // todo: listCourses() formatting
+
+    // todo: Course deletion protection (don’t delete course with students)
+
     @Override
     public void listCourses() {
         // we implement next

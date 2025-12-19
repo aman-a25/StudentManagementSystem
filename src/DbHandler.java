@@ -1,5 +1,6 @@
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Scanner;
 
@@ -92,5 +93,21 @@ public class DbHandler implements StudentOperations {
                 System.out.print("Invalid number — try again: ");
             }
         }
+    }
+
+    private boolean isValidStudentId(int id) {
+        String sql = "SELECT id from students where id = ?";
+
+        try(Connection con = DbConnection.getConnection();
+            PreparedStatement ps = con.prepareStatement(sql)
+        ) {
+            ps.setInt(1 , id);
+            ResultSet rs = ps.executeQuery();
+            return rs.next(); // true if student exists
+        } catch (SQLException e) {
+            System.out.println("❌ Error validating student ID: " + e.getMessage());
+            return false;
+        }
+
     }
 }
