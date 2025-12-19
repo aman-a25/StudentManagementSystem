@@ -108,6 +108,46 @@ public class DbHandler implements StudentOperations {
 
     @Override
     public void listAll() {
+        System.out.println("=========================== list of all students ===========================");
+        String sql = """
+            SELECT s.id, s.name, s.age, s.mobile_number, s.email, c.course_name
+            FROM students s
+            JOIN courses c ON s.course_id = c.course_id
+            """;
+        try(Connection con = DbConnection.getConnection();
+            PreparedStatement ps = con.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery()
+        ){
+
+            boolean found = false;
+
+            System.out.printf(
+                    "%-5s %-20s %-5s %-15s %-25s %-20s%n",
+                    "ID", "Name", "Age", "Mobile", "Email", "Course"
+            );
+            System.out.println("-------------------------------------------------------------------------------");
+
+            while (rs.next()) {
+                found = true;
+
+                System.out.printf(
+                        "%-5d %-20s %-5d %-15s %-25s %-20s%n",
+                        rs.getInt("id"),
+                        rs.getString("name"),
+                        rs.getInt("age"),
+                        rs.getString("mobile_number"),
+                        rs.getString("email"),
+                        rs.getString("course_name")
+                );
+            }
+
+            if (!found) {
+                System.out.println("❌ No students found.");
+            }
+
+        } catch (SQLException e ){
+            System.out.printf("failed to list all students "+ e.getMessage());
+        }
 
     }
     @Override
