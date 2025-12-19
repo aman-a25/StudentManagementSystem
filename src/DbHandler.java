@@ -11,11 +11,16 @@ public class DbHandler implements StudentOperations {
     public void register() {
 
         System.out.println("\n ====== REGISTER NEW STUDENT ======");
+
         System.out.println("Enter the name of the new student : ");
         String name = scan.nextLine();
+        if (name.trim().isEmpty()) {
+            System.out.println("you have entered a empty string as name please try again");
+        }
 
         System.out.println("Enter the age of the new student : ");
         int age = readIntSafe();
+        // todo: implement a logic for making sure the string is not empty one
 
         System.out.println("Enter the mobile no.  of the new student : ");
         String moNo = scan.nextLine();
@@ -27,11 +32,12 @@ public class DbHandler implements StudentOperations {
         new CourseHandler().listCourses();
         System.out.println("please enter course ID : ");
 
-        int course = scan.nextInt();
+        int course = readIntSafe();
+        // todo: implement a logic for checking that is course id exists or not in sql table
 
         System.out.println("\nStudent data captured — Next step is DB insert.");
 
-        String sql = "INSERT INTO students (name, age, mobile_no, email, course) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO students (name, age, mobile_number, email, course_id) VALUES (?, ?, ?, ?, ?)";
 
         try (
                 Connection con = DbConnection.getConnection();
