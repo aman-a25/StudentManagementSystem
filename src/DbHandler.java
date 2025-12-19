@@ -1,7 +1,4 @@
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.Scanner;
 
 public class DbHandler implements StudentOperations {
@@ -69,7 +66,46 @@ public class DbHandler implements StudentOperations {
 
         System.out.println("\n==== SEARCH STUDENT ====");
 
+        System.out.println("Enter student ID : ");
+        int id = readIntSafe();
+
+        //validate student ID
+        if(!isValidStudentId(id)){
+            System.out.println("❌ No student found with ID: " + id);
+            return;
+        }
+
+        String sql = """
+            SELECT s.id, s.name, s.age, s.mobile_number, s.email, c.course_name
+            FROM students s
+            JOIN courses c ON s.course_id = c.course_id
+            WHERE s.id = ?
+        """;
+
+        try(Connection con = DbConnection.getConnection();
+            PreparedStatement ps = con.prepareStatement(sql)
+        ) {
+            ps.setInt(1, id);
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                System.out.println("\n----- STUDENT DETAILS -----");
+                System.out.println("ID       : " + rs.getInt("id"));
+                System.out.println("Name     : " + rs.getString("name"));
+                System.out.println("Age      : " + rs.getInt("age"));
+                System.out.println("Mobile   : " + rs.getString("mobile_number"));
+                System.out.println("Email    : " + rs.getString("email"));
+                System.out.println("Course   : " + rs.getString("course_name"));
+                System.out.println("---------------------------");
+            }
+        } catch (SQLException e) {
+            System.out.println("failed during search "+ e.getMessage());
+
+        }
+
     }
+
     @Override
     public void listAll() {
 
