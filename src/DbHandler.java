@@ -17,24 +17,44 @@ public class DbHandler implements StudentOperations {
         System.out.println("Enter the age of the new student : ");
         int age = readIntSafe();
 
+        System.out.println("Enter the mobile no.  of the new student : ");
+        String moNo = scan.nextLine();
+
         System.out.println("Enter the email of the new student : ");
         String email = scan.nextLine();
 
-        System.out.println("Enter the course: of the new student : ");
-        String course = scan.nextLine();
+        System.out.println("Enter the course: of the new student  ");
+        new CourseHandler().listCourses();
+        System.out.println("please enter course ID : ");
+
+        int course = scan.nextInt();
 
         System.out.println("\nStudent data captured — Next step is DB insert.");
 
-        String sql = "INSERT INTO students (name, age, email, course) VALUES (?, ?, ?, )";
+        String sql = "INSERT INTO students (name, age, mobile_no, email, course) VALUES (?, ?, ?, ?)";
 
         try (
                 Connection con = DbConnection.getConnection();
-                PreparedStatement ps = con.prepareStatement(sql);
+                PreparedStatement ps = con.prepareStatement(sql)
                 ){
+
+            // preparing the statement with the pre created sql string
             ps.setString(1, name);
             ps.setInt(2, age);
-            ps.setString(3,email);
-            ps.setString(4, course);
+            ps.setString(3, moNo);
+            ps.setString(4, email);
+            ps.setInt(5, course);
+
+            // executing the prepared statement
+            int rows = ps.executeUpdate();
+
+            if (rows > 0) {
+                System.out.println("✅ Student registered successfully!");
+            } else {
+                System.out.println("❌ Failed to register student.");
+            }
+        } catch (SQLException e) {
+            System.out.println("❌ Error during registration: " + e.getMessage());
         }
     }
     @Override

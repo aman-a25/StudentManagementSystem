@@ -14,7 +14,7 @@ public class DbConnection {
 
         static {
             try {
-                // Optional for modern JDBC, but safe to keep basically it lodes JDBC driver
+                // Optional for modern JDBC, but safe to keep basically it checks that JDBC driver is loaded and present or not
                 Class.forName("com.mysql.cj.jdbc.Driver");
 
                 // loading properties
