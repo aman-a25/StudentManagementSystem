@@ -70,4 +70,15 @@ public class CourseHandler implements CourseOperations {
     public void deleteCourse() {
         // later
     }
+
+    public boolean courseExists(int courseId) {
+        return isValidCourseId(courseId);
+    }
+
+    private boolean isValidCourseId(int courseId) {
+        String sql = "SELECT course_id FROM courses WHERE course_id = ?";
+        //todo
+        return false;
+    }
+
 }
