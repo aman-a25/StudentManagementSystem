@@ -80,7 +80,7 @@ public class Main {
         System.out.println(" ");
 
         // one object to be used in all iteration of while block (student menu )
-        StudentOperations StuOps = new Stud;
+        StudentOperations StuOps = new StudentHandler();
 
         while (true){
             // reading input in each iteration
