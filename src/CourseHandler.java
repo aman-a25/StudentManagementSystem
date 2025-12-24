@@ -11,15 +11,13 @@ public class CourseHandler implements CourseOperations {
     @Override
     public void addCourse() {
         System.out.println("=========================== REGISTER NEW COURSE ===========================");
+
         // taking values
-
-        System.out.println("Enter the name of the new course: ");
-        String name = readStringSafe();
-
-        while ( !isValidCourseName(name)) {
+        String name ;
+        do {
             System.out.println("Enter the name of the new course: ");
             name = readStringSafe();
-        }
+        }while ( !isValidCourseName(name));
 
         System.out.println("Enter the description of the new course: ");
         String desc = readStringSafe();
@@ -147,6 +145,13 @@ public class CourseHandler implements CourseOperations {
 
     }
 
+    public boolean courseExists(int courseId) {
+        return isValidCourseId(courseId);
+    }
+
+
+    // helper methods
+
     private String readStringSafe(){
 
         String str = scan.nextLine();
@@ -171,10 +176,6 @@ public class CourseHandler implements CourseOperations {
         }
     }
 
-    public boolean courseExists(int courseId) {
-        return isValidCourseId(courseId);
-    }
-
     private boolean isValidCourseId(int courseId) {
         String sql = "SELECT course_id FROM courses WHERE course_id = ?";
         try(Connection con = DbConnection.getConnection();
@@ -183,13 +184,8 @@ public class CourseHandler implements CourseOperations {
             ps.setInt(1,courseId);
             ResultSet rs = ps.executeQuery();
 
-            if(rs.next()){
-                System.out.println("the given id is valid");
-                return true;
-            }else{
-                System.out.println("the given id dose not exists");
-                return false;
-            }
+            return rs.next();
+
         } catch (SQLException e) {
             System.out.println("error while checking the given course id is valid or not : " + e.getMessage());
         }
@@ -214,13 +210,8 @@ public class CourseHandler implements CourseOperations {
             // executing the prepared statement
             ResultSet rs = ps.executeQuery();
 
-            if (rs.next()) {
-                System.out.println("there is already a course for this name please either select a different name ");
-                return false;
-            } else {
-                System.out.println(" it is valid ");
-                return true;
-            }
+            return rs.next();
+
         } catch (SQLException e) {
 
             System.out.println(" error while validating the name : "+ e.getMessage());
