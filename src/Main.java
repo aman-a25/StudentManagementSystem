@@ -160,6 +160,8 @@ public class Main {
             catch (InputMismatchException e){
                 System.out.println("please enter a digit ranging " + min + " to " + max );
                 Scan.nextLine();
+
+                // todo: right now we have two of readIntSafe  and readStringSafe make a saprate I/O handler class
             }
         }
     }

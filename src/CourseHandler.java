@@ -17,7 +17,7 @@ public class CourseHandler implements CourseOperations {
         do {
             System.out.println("Enter the name of the new course: ");
             name = readStringSafe();
-        }while ( !isValidCourseName(name));
+        }while ( !courseNameExists(name));
 
         System.out.println("Enter the description of the new course: ");
         String desc = readStringSafe();
@@ -107,7 +107,9 @@ public class CourseHandler implements CourseOperations {
         do {
             System.out.println("are you sure you want to delete y/n ");
             validation = readStringSafe();
-            if(validation.trim().charAt(0) == 'y' ||validation.trim().charAt(0) == 'n'  ){
+            char choice = validation.trim().toLowerCase().charAt(0);
+
+            if(choice == 'y'||choice == 'n'){
                 validFlag = true ;
             }else {
                 System.out.println("the given input is invalid please try again ");
@@ -192,7 +194,7 @@ public class CourseHandler implements CourseOperations {
         return false;
     }
 
-    private boolean isValidCourseName(String courseName) {
+    private boolean courseNameExists(String courseName) {
 
 
         String sql = """
