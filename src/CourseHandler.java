@@ -10,23 +10,21 @@ public class CourseHandler implements CourseOperations {
 
     @Override
     public void addCourse() {
-        System.out.println("\n ====== REGISTER NEW COURSE ======");
-
-        String name ;
+        System.out.println("=========================== REGISTER NEW COURSE ===========================");
+        // taking values
 
         System.out.println("Enter the name of the new course: ");
+        String name = readStringSafe();
 
-        // Force valid course name
-        while (true) {
-            System.out.print("Enter the name of the new course: ");
-            name = scan.nextLine().trim();
-
-            if (!name.isEmpty()) {
-                break;
-            }
-            System.out.println("❌ Course name cannot be empty. Please try again.");
+        while ( !isValidCourseName(name)) {
+            System.out.println("Enter the name of the new course: ");
+            name = readStringSafe();
         }
-        String sql = "INSERT INTO courses (course_name) VALUES (?)";
+
+        System.out.println("Enter the description of the new course: ");
+        String desc = readStringSafe();
+
+        String sql = "INSERT INTO courses (course_name , course_desc) VALUES (? , ?)";
 
         try (
                 Connection con = DbConnection.getConnection();
@@ -35,6 +33,7 @@ public class CourseHandler implements CourseOperations {
 
             // preparing the statement with the pre created sql string
             ps.setString(1, name);
+            ps.setString(2, desc);
 
             // executing the prepared statement
             int rows = ps.executeUpdate();
@@ -45,30 +44,67 @@ public class CourseHandler implements CourseOperations {
                 System.out.println("❌ Failed to add course.");
             }
         } catch (SQLException e) {
-
-            if (e.getMessage().toLowerCase().contains("duplicate")) {
-                System.out.println("❌ This course already exists.");
-            } else {
                 System.out.println("❌ Error adding course: " + e.getMessage());
-            }
+
         }
 
     }
-
-    // todo: isValidCourseId() here
-
-    // todo: listCourses() formatting
-
     // todo: Course deletion protection (don’t delete course with students)
 
     @Override
     public void listCourses() {
-        // we implement next
+        System.out.println("=========================== list of all courses ===========================");
+        String sql = """
+            SELECT * FROM courses
+            """;
+
+        try(Connection con = DbConnection.getConnection();
+            PreparedStatement ps = con.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery()
+        ){
+
+            boolean found = false;
+
+            System.out.printf(
+                    "%-5s %-20s %-100s%n",
+                    "Course_ID", "Course_Name", "Course_Description"
+            );
+            System.out.println("-------------------------------------------------------------------------------");
+
+            while (rs.next()) {
+                found = true;
+
+                System.out.printf(
+                        "%-5s %-20s %-100s%n",
+                        rs.getInt("course_id"),
+                        rs.getString("course_name"),
+                        rs.getString("course_desc")
+                );
+            }
+
+            if (!found) {
+                System.out.println("❌ No courses were found.");
+            }
+
+        } catch (SQLException e ){
+            System.out.println("failed to list all courses "+ e.getMessage());
+        }
     }
 
     @Override
     public void deleteCourse() {
         // later
+    }
+
+    private String readStringSafe(){
+
+        String str = scan.nextLine();
+
+        while (str.trim().isEmpty()) {
+            System.out.println("Given string is empty, please try again:");
+            str = scan.nextLine();
+        }
+        return str;
     }
 
     public boolean courseExists(int courseId) {
@@ -77,8 +113,54 @@ public class CourseHandler implements CourseOperations {
 
     private boolean isValidCourseId(int courseId) {
         String sql = "SELECT course_id FROM courses WHERE course_id = ?";
-        //todo
+        try(Connection con = DbConnection.getConnection();
+            PreparedStatement ps = con.prepareStatement(sql)
+            ){
+            ps.setInt(1,courseId);
+            ResultSet rs = ps.executeQuery();
+
+            if(rs.next()){
+                System.out.println("the given id is valid");
+            }else{
+                System.out.println("the given id dose not exists");
+            }
+        } catch (SQLException e) {
+            System.out.println("error while checking the given course id is valid or not : " + e.getMessage());
+        }
         return false;
     }
+
+    private boolean isValidCourseName(String courseName) {
+
+
+        String sql = """
+                select * from courses
+                where course_name = ? ;
+                """;
+        try (
+                Connection con = DbConnection.getConnection();
+                PreparedStatement ps = con.prepareStatement(sql)
+        ) {
+
+            // preparing the statement with the pre created sql string
+            ps.setString(1, courseName);
+
+            // executing the prepared statement
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                System.out.println("there is already a course for this name please either select a different name ");
+                return false;
+            } else {
+                System.out.println(" it is valid ");
+                return true;
+            }
+        } catch (SQLException e) {
+
+            System.out.println(" error while validating the name : "+ e.getMessage());
+        }
+        return false; // safe fallback
+    }
+
 
 }
