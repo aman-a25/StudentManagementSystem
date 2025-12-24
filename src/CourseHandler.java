@@ -93,7 +93,58 @@ public class CourseHandler implements CourseOperations {
 
     @Override
     public void deleteCourse() {
-        // later
+        System.out.println("=========================== delete a course ===========================");
+
+        System.out.println("please enter the course_ID of the course you want to delete ");
+        int id = readIntSafe();
+
+        if(!isValidCourseId(id)){
+            System.out.println("the given course id is invalid");
+            return;
+        }
+
+        String validation ;
+
+        boolean validFlag = false;
+        do {
+            System.out.println("are you sure you want to delete y/n ");
+            validation = readStringSafe();
+            if(validation.trim().charAt(0) == 'y' ||validation.trim().charAt(0) == 'n'  ){
+                validFlag = true ;
+            }else {
+                System.out.println("the given input is invalid please try again ");
+            }
+        } while(!validFlag);
+
+        if(validation.trim().charAt(0) == 'y' ) {
+
+            String sql = """
+                    DELETE FROM courses
+                    WHERE course_id = ?;
+                    """;
+
+            try (Connection con = DbConnection.getConnection();
+                 PreparedStatement ps = con.prepareStatement(sql)) {
+                ps.setInt(1, id);
+
+                int row = ps.executeUpdate();
+
+                if (row > 0) {
+                    System.out.println("data deleted successfully");
+                } else {
+                    System.out.println("query ran successfully but no data deleted");
+                }
+
+            } catch (SQLException e) {
+                System.out.println("error while running course deletion query : " + e.getMessage());
+
+            }
+
+        } else if (validation.trim().charAt(0) == 'n') {
+            System.out.println("exiting deletion process");
+
+        }
+
     }
 
     private String readStringSafe(){
@@ -105,6 +156,19 @@ public class CourseHandler implements CourseOperations {
             str = scan.nextLine();
         }
         return str;
+    }
+
+    private int readIntSafe() {
+        while (true) {
+            try {
+
+                return Integer.parseInt(scan.nextLine());
+
+            } catch (Exception e) {
+
+                System.out.print("Invalid number — try again: ");
+            }
+        }
     }
 
     public boolean courseExists(int courseId) {
@@ -121,8 +185,10 @@ public class CourseHandler implements CourseOperations {
 
             if(rs.next()){
                 System.out.println("the given id is valid");
+                return true;
             }else{
                 System.out.println("the given id dose not exists");
+                return false;
             }
         } catch (SQLException e) {
             System.out.println("error while checking the given course id is valid or not : " + e.getMessage());
