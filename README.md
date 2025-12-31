@@ -48,18 +48,31 @@ IntelliJ IDEA
 Git & GitHub
 
 🧩 Project Structure
+
 StudentManagementSystem/
+
 │
+
 ├── src/
+
 │   ├── Main.java
+
 │   ├── DbConnection.java
+
 │   ├── StudentHandler.java
+
 │   ├── CourseHandler.java
+
 │   ├── StudentOperations.java
+
 │   ├── CourseOperations.java
+
 │
+
 ├── db.properties
+
 ├── README.md
+
 
 🗄️ Database Schema
 courses table
