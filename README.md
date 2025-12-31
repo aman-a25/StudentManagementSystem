@@ -1,31 +1,31 @@
-🎓 Student Management System (Java + MySQL)
+# 🎓 Student Management System (Java + MySQL)
 
 A console-based Student Management System built using Java, JDBC, and MySQL, designed to manage students and courses efficiently with a clean, modular, and object-oriented architecture.
 
-📌 Features
-👨‍🎓 Student Management
+## 📌 Features
+### 👨‍🎓 Student Management
 
-Register a new student
+#### Register a new student
 
-Search student by ID
+#### Search student by ID
 
-List all students
+#### List all students
 
-Update student details:
+#### Update student details:
 
-Name
+#### Name
 
-Age
+#### Age
 
-Mobile number
+#### Mobile number
 
-Email
+#### Email
 
-Course
+#### Course
 
-Delete a student with confirmation
+#### elete a student with confirmation
 
-📚 Course Management
+## 📚 Course Management
 
 Add new courses (with name & description validation)
 
@@ -35,7 +35,7 @@ Delete courses with confirmation
 
 Prevent invalid course selection during student registration/update
 
-🛠️ Technologies Used
+## 🛠️ Technologies Used
 
 Java (Core Java)
 
@@ -47,34 +47,25 @@ IntelliJ IDEA
 
 Git & GitHub
 
-🧩 Project Structure
+## 🧩 Project Structure
 
 StudentManagementSystem/
 
-│
-
+```text
 ├── src/
-
 │   ├── Main.java
-
 │   ├── DbConnection.java
-
 │   ├── StudentHandler.java
-
 │   ├── CourseHandler.java
-
 │   ├── StudentOperations.java
-
-│   ├── CourseOperations.java
-
-│
-
+│   └── CourseOperations.java
 ├── db.properties
+└── README.md
+```
 
-├── README.md
+## 🗄️ Database Schema
 
-
-🗄️ Database Schema
+```
 courses table
 CREATE TABLE courses (
     course_id INT PRIMARY KEY AUTO_INCREMENT,
@@ -93,15 +84,17 @@ CREATE TABLE students (
     FOREIGN KEY (course_id) REFERENCES courses(course_id)
 );
 
-⚙️ Configuration
+```
+
+## ⚙️ Configuration
 
 Update your database credentials in db.properties:
 
-db.url=jdbc:mysql://localhost:3306/student_db
+db.url=jdbc:mysql://localhost:3306/your_db
 db.username=your_username
 db.password=your_password
 
-▶️ How to Run the Project
+## ▶️ How to Run the Project
 
 Clone the repository:
 
@@ -122,7 +115,7 @@ Run:
 
 Main.java
 
-🧠 Design Highlights
+## 🧠 Design Highlights
 
 Uses interfaces for abstraction (StudentOperations, CourseOperations)
 
@@ -142,7 +135,7 @@ Course name duplication
 
 User-friendly confirmation before destructive actions (delete/update)
 
-🚀 Future Enhancements
+## 🚀 Future Enhancements
 
 Prevent deleting courses that have registered students
 
@@ -156,7 +149,7 @@ Unit testing
 
 GUI / REST API version
 
-👨‍💻 Author
+## 👨‍💻 Author
 
 Aman Kumar
 
